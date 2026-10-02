@@ -41,3 +41,6 @@ example
 # generated native folders
 /ios
 /android
+
+# fotos cruas do celular (têm GPS no EXIF)
+fotos-originais/
