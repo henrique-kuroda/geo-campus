@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import MapView, { Marker, type Region } from 'react-native-maps';
 import {
   CAMPUS_BOUNDS,
@@ -24,12 +24,13 @@ export function GuessMap({ guess, onGuess }: Props) {
 
   // O react-native-maps não trava a câmera numa área (o setMapBoundaries não funciona na
   // nova arquitetura), então ao soltar fora do campus a câmera volta só até a borda.
+  // animateCamera move só o centro e mantém o zoom, sem recalcular a região.
   const keepInsideCampus = (region: Region) => {
     const center = clampToBounds(region, CAMPUS_BOUNDS);
     const offset =
       Math.abs(center.latitude - region.latitude) + Math.abs(center.longitude - region.longitude);
     if (offset > BOUNDS_TOLERANCE_DEGREES) {
-      mapRef.current?.animateToRegion({ ...region, ...center }, 300);
+      mapRef.current?.animateCamera({ center }, { duration: 250 });
     }
   };
 
@@ -43,7 +44,9 @@ export function GuessMap({ guess, onGuess }: Props) {
       style={StyleSheet.absoluteFill}
       mapType="satellite"
       initialRegion={CAMPUS_REGION}
-      minZoomLevel={MIN_ZOOM_LEVEL}
+      // No iPhone o minZoomLevel liga um modo antigo que força uma animação de zoom a cada
+      // movimento (o mapa "trava"); lá o limite vem só do cameraZoomRange.
+      minZoomLevel={Platform.OS === 'android' ? MIN_ZOOM_LEVEL : undefined}
       cameraZoomRange={{ maxCenterCoordinateDistance: MAX_CAMERA_DISTANCE_METERS }}
       rotateEnabled={false}
       pitchEnabled={false}
