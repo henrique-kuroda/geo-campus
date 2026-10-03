@@ -1,5 +1,7 @@
 export type Coordinate = { latitude: number; longitude: number };
 
+export type Bounds = { northEast: Coordinate; southWest: Coordinate };
+
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
 export type Place = {

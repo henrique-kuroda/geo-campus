@@ -1,8 +1,17 @@
 import { useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import MapView, { Marker, type Region } from 'react-native-maps';
-import { CAMPUS_REGION, MIN_ZOOM_LEVEL } from '@/constants/campus';
+import {
+  CAMPUS_BOUNDS,
+  CAMPUS_REGION,
+  MAX_CAMERA_DISTANCE_METERS,
+  MIN_ZOOM_LEVEL,
+} from '@/constants/campus';
+import { clampToBounds, isInsideBounds } from '@/game/bounds';
 import type { Coordinate } from '@/game/types';
+
+// ~1 m: abaixo disso a câmera já está na borda e não precisa voltar (evita animar em loop).
+const BOUNDS_TOLERANCE_DEGREES = 0.00001;
 
 type Props = {
   guess?: Coordinate;
@@ -13,12 +22,19 @@ type Props = {
 export function GuessMap({ guess, onGuess }: Props) {
   const mapRef = useRef<MapView>(null);
 
-  // Traz a câmera de volta se o jogador arrastar para fora do campus.
+  // O react-native-maps não trava a câmera numa área (o setMapBoundaries não funciona na
+  // nova arquitetura), então ao soltar fora do campus a câmera volta só até a borda.
   const keepInsideCampus = (region: Region) => {
-    const outside =
-      Math.abs(region.latitude - CAMPUS_REGION.latitude) > CAMPUS_REGION.latitudeDelta / 2 ||
-      Math.abs(region.longitude - CAMPUS_REGION.longitude) > CAMPUS_REGION.longitudeDelta / 2;
-    if (outside) mapRef.current?.animateToRegion(CAMPUS_REGION, 300);
+    const center = clampToBounds(region, CAMPUS_BOUNDS);
+    const offset =
+      Math.abs(center.latitude - region.latitude) + Math.abs(center.longitude - region.longitude);
+    if (offset > BOUNDS_TOLERANCE_DEGREES) {
+      mapRef.current?.animateToRegion({ ...region, ...center }, 300);
+    }
+  };
+
+  const handlePress = (coordinate: Coordinate) => {
+    if (isInsideBounds(coordinate, CAMPUS_BOUNDS)) onGuess(coordinate);
   };
 
   return (
@@ -28,10 +44,11 @@ export function GuessMap({ guess, onGuess }: Props) {
       mapType="satellite"
       initialRegion={CAMPUS_REGION}
       minZoomLevel={MIN_ZOOM_LEVEL}
+      cameraZoomRange={{ maxCenterCoordinateDistance: MAX_CAMERA_DISTANCE_METERS }}
       rotateEnabled={false}
       pitchEnabled={false}
       toolbarEnabled={false}
-      onPress={event => onGuess(event.nativeEvent.coordinate)}
+      onPress={event => handlePress(event.nativeEvent.coordinate)}
       onRegionChangeComplete={keepInsideCampus}
     >
       {guess && <Marker coordinate={guess} />}
