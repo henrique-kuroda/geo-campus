@@ -13,7 +13,10 @@ export function distanceInMeters(a: Coordinate, b: Coordinate): number {
   return 2 * EARTH_RADIUS_METERS * Math.asin(Math.sqrt(h));
 }
 
+// Gaussiana em vez de exponencial: cai devagar perto do ponto (erros pequenos são do GPS)
+// e despenca depois, chegando a zero em ~150 m.
 export function scoreForDistance(meters: number): number {
-  const effective = Math.max(0, meters - GAME_CONFIG.toleranceMeters);
-  return Math.round(GAME_CONFIG.maxScore * Math.exp(-effective / GAME_CONFIG.scoreDecayMeters));
+  const effective =
+    Math.max(0, meters - GAME_CONFIG.toleranceMeters) / GAME_CONFIG.scoreFalloffMeters;
+  return Math.round(GAME_CONFIG.maxScore * Math.exp(-(effective ** 2)));
 }

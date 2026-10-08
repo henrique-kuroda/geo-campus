@@ -23,10 +23,14 @@ describe('scoreForDistance', () => {
   it.each([
     [0, 5000],
     [10, 5000],
-    [20, 4232],
-    [50, 2567],
-    [100, 1116],
-    [200, 211],
+    [20, 4804],
+    [30, 4261],
+    [50, 2636],
+    [60, 1839],
+    [75, 923],
+    [100, 196],
+    [150, 2],
+    [200, 0],
   ])('erro de %i m vale %i pontos', (meters, points) => {
     expect(scoreForDistance(meters)).toBe(points);
   });
