@@ -3,8 +3,8 @@
     "id": "busto-fundador",
     "name": "Busto do fundador",
     "coordinate": {
-      "latitude": -22.375915,
-      "longitude": -47.369689
+      "latitude": -22.375843,
+      "longitude": -47.369975
     },
     "difficulty": "medium",
     "indoor": true,
