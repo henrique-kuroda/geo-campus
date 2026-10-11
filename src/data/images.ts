@@ -1,6 +1,7 @@
 // Gerado por scripts/import-photos.mjs: o require de imagem precisa ser estático no React Native.
 const images: Record<string, number> = {
   'busto-fundador-1': require('../../assets/places/busto-fundador-1.jpg'),
+  'predio-budoya-1': require('../../assets/places/predio-budoya-1.jpg'),
 };
 
 // Se o id não estiver no mapa, é tratado como URL (fotos remotas no futuro).

@@ -11,5 +11,18 @@
     "photos": [
       "busto-fundador-1"
     ]
+  },
+  {
+    "id": "predio-budoya",
+    "name": "Prédio Paulo Sávio Budoya",
+    "coordinate": {
+      "latitude": -22.37802,
+      "longitude": -47.369923
+    },
+    "difficulty": "medium",
+    "indoor": false,
+    "photos": [
+      "predio-budoya-1"
+    ]
   }
 ]
