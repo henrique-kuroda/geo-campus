@@ -1,10 +1,10 @@
 import { useEffect, useReducer, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
-import { Image } from 'expo-image';
 import * as Haptics from 'expo-haptics';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GuessMap } from '@/components/GuessMap';
+import { PhotoViewer } from '@/components/PhotoViewer';
 import { ResultMap } from '@/components/ResultMap';
 import { COLORS } from '@/constants/theme';
 import { resolvePhoto } from '@/data/images';
@@ -90,8 +90,13 @@ export default function GameScreen() {
 
   return (
     <View style={styles.fill}>
-      <Image source={resolvePhoto(round.photo)} style={styles.fill} contentFit="cover" />
-      <Text style={[styles.counter, { top: insets.top + 12 }]}>
+      {/* key por rodada: cada foto nova começa sem zoom e centralizada */}
+      <PhotoViewer
+        key={state.current}
+        source={resolvePhoto(round.photo)}
+        showHint={state.current === 0}
+      />
+      <Text style={[styles.counter, { top: insets.top + 12 }]} pointerEvents="none">
         {`${label}Rodada ${state.current + 1} de ${state.rounds.length}`}
       </Text>
       <View

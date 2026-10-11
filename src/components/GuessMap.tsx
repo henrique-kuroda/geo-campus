@@ -48,7 +48,10 @@ export function GuessMap({ guess, onGuess }: Props) {
       // movimento (o mapa "trava"); lá o limite vem só do cameraZoomRange.
       minZoomLevel={Platform.OS === 'android' ? MIN_ZOOM_LEVEL : undefined}
       cameraZoomRange={{ maxCenterCoordinateDistance: MAX_CAMERA_DISTANCE_METERS }}
-      rotateEnabled={false}
+      // Girar com dois dedos; a bússola aparece quando o mapa sai do norte e,
+      // ao tocar nela, ele volta ao norte.
+      rotateEnabled
+      showsCompass
       pitchEnabled={false}
       toolbarEnabled={false}
       onPress={event => handlePress(event.nativeEvent.coordinate)}
