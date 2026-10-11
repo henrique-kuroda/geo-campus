@@ -13,6 +13,19 @@
     ]
   },
   {
+    "id": "ginasio",
+    "name": "Ginásio",
+    "coordinate": {
+      "latitude": -22.376543,
+      "longitude": -47.369215
+    },
+    "difficulty": "medium",
+    "indoor": true,
+    "photos": [
+      "ginasio-1"
+    ]
+  },
+  {
     "id": "predio-budoya",
     "name": "Prédio Paulo Sávio Budoya",
     "coordinate": {
