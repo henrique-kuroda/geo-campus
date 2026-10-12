@@ -65,6 +65,19 @@
     ]
   },
   {
+    "id": "portaria",
+    "name": "Portaria principal",
+    "coordinate": {
+      "latitude": -22.374329,
+      "longitude": -47.366833
+    },
+    "difficulty": "medium",
+    "indoor": false,
+    "photos": [
+      "portaria-1"
+    ]
+  },
+  {
     "id": "predio-budoya",
     "name": "Prédio Paulo Sávio Budoya",
     "coordinate": {
