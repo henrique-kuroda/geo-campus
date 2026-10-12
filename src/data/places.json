@@ -26,6 +26,19 @@
     ]
   },
   {
+    "id": "capela",
+    "name": "Capela",
+    "coordinate": {
+      "latitude": -22.374513,
+      "longitude": -47.368397
+    },
+    "difficulty": "medium",
+    "indoor": false,
+    "photos": [
+      "capela-1"
+    ]
+  },
+  {
     "id": "escadaria-convivencia",
     "name": "Escadaria da área de convivência",
     "coordinate": {

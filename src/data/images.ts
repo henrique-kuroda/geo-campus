@@ -2,6 +2,7 @@
 const images: Record<string, number> = {
   'anfiteatro-1': require('../../assets/places/anfiteatro-1.jpg'),
   'busto-fundador-1': require('../../assets/places/busto-fundador-1.jpg'),
+  'capela-1': require('../../assets/places/capela-1.jpg'),
   'escadaria-convivencia-1': require('../../assets/places/escadaria-convivencia-1.jpg'),
   'ginasio-1': require('../../assets/places/ginasio-1.jpg'),
   'neowater-1': require('../../assets/places/neowater-1.jpg'),
