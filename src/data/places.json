@@ -91,6 +91,19 @@
     ]
   },
   {
+    "id": "piscina",
+    "name": "Piscina",
+    "coordinate": {
+      "latitude": -22.375767,
+      "longitude": -47.36895
+    },
+    "difficulty": "medium",
+    "indoor": false,
+    "photos": [
+      "piscina-1"
+    ]
+  },
+  {
     "id": "portaria",
     "name": "Portaria principal",
     "coordinate": {
