@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { COLORS } from '@/constants/theme';
+import { modeLabel } from '@/game/modes';
 import { loadHistory, type MatchRecord } from '@/services/history';
 
 const formatDate = (iso: string) =>
@@ -25,7 +26,7 @@ export default function HistoryScreen() {
       renderItem={({ item }) => (
         <View style={styles.row}>
           <View>
-            <Text style={styles.mode}>{item.mode === 'daily' ? 'Desafio do dia' : 'Partida'}</Text>
+            <Text style={styles.mode}>{modeLabel(item.mode)}</Text>
             <Text style={styles.date}>{formatDate(item.date)}</Text>
           </View>
           <Text style={styles.total}>

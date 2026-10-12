@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { COLORS } from '@/constants/theme';
+import { modeLabel } from '@/game/modes';
 import { saveMatch } from '@/services/history';
 
 export default function SummaryScreen() {
@@ -21,7 +22,7 @@ export default function SummaryScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.label}>{mode === 'daily' ? 'Desafio do dia' : 'Partida'}</Text>
+        <Text style={styles.label}>{modeLabel(mode)}</Text>
         <Text style={styles.total}>{total.toLocaleString('pt-BR')}</Text>
         <Text style={styles.label}>de {max.toLocaleString('pt-BR')} pontos</Text>
       </View>

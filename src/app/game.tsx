@@ -11,6 +11,7 @@ import { resolvePhoto } from '@/data/images';
 import { placeRepository } from '@/data/repository';
 import { GAME_CONFIG } from '@/game/config';
 import { gameReducer, initialGameState, totalScore } from '@/game/engine';
+import { modeLabel, roundCount } from '@/game/modes';
 import { buildRounds, dailySeed, mulberry32 } from '@/game/random';
 import type { Place } from '@/game/types';
 
@@ -25,7 +26,7 @@ export default function GameScreen() {
     placeRepository.getAll().then(list => {
       const random = mode === 'daily' ? mulberry32(dailySeed()) : Math.random;
       setPlaces(Object.fromEntries(list.map(place => [place.id, place])));
-      dispatch({ type: 'START', rounds: buildRounds(list, GAME_CONFIG.roundsPerMatch, random) });
+      dispatch({ type: 'START', rounds: buildRounds(list, roundCount(mode, list.length), random) });
     });
   }, [mode]);
 
@@ -86,7 +87,7 @@ export default function GameScreen() {
     );
   }
 
-  const label = mode === 'daily' ? 'Desafio do dia · ' : '';
+  const label = mode === 'classic' ? '' : `${modeLabel(mode)} · `;
 
   return (
     <View style={styles.fill}>

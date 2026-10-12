@@ -4,7 +4,9 @@ import { router, useFocusEffect } from 'expo-router';
 import { SymbolView, type SymbolViewProps } from 'expo-symbols';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '@/constants/theme';
+import { placeRepository } from '@/data/repository';
 import { GAME_CONFIG } from '@/game/config';
+import { countsForRecord } from '@/game/modes';
 import { loadHistory } from '@/services/history';
 
 type Icon = SymbolViewProps['name'];
@@ -17,6 +19,7 @@ const ICONS = {
   trophy: { ios: 'trophy.fill', android: 'emoji_events', web: 'emoji_events' },
   play: { ios: 'play.fill', android: 'play_arrow', web: 'play_arrow' },
   calendar: { ios: 'calendar', android: 'calendar_today', web: 'calendar_today' },
+  allPhotos: { ios: 'photo.stack', android: 'photo_library', web: 'photo_library' },
   chevron: { ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' },
   history: { ios: 'clock.arrow.circlepath', android: 'history', web: 'history' },
 } satisfies Record<string, Icon>;
@@ -32,13 +35,16 @@ const today = () => new Date().toLocaleDateString('pt-BR', { day: '2-digit', mon
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const [best, setBest] = useState<number | null>(null);
+  const [placeCount, setPlaceCount] = useState<number | null>(null);
 
   // Recarrega ao voltar para a tela, para o recorde aparecer logo depois de uma partida.
   useFocusEffect(
     useCallback(() => {
-      loadHistory().then(history =>
-        setBest(history.length ? Math.max(...history.map(match => match.total)) : null),
-      );
+      loadHistory().then(history => {
+        const totals = history.filter(match => countsForRecord(match.mode)).map(m => m.total);
+        setBest(totals.length ? Math.max(...totals) : null);
+      });
+      placeRepository.getAll().then(places => setPlaceCount(places.length));
     }, []),
   );
 
@@ -90,15 +96,31 @@ export default function HomeScreen() {
         </Pressable>
 
         <Pressable
-          style={({ pressed }) => [styles.dailyCard, pressed && styles.pressed]}
+          style={({ pressed }) => [styles.modeCard, pressed && styles.pressed]}
           onPress={() => router.push({ pathname: '/game', params: { mode: 'daily' } })}
         >
           <View style={styles.stepIcon}>
             <SymbolView name={ICONS.calendar} tintColor={COLORS.primary} size={22} />
           </View>
           <View style={styles.grow}>
-            <Text style={styles.dailyTitle}>Desafio do dia</Text>
-            <Text style={styles.dailySubtitle}>{`Mesmas fotos para todos · ${today()}`}</Text>
+            <Text style={styles.modeTitle}>Desafio do dia</Text>
+            <Text style={styles.modeSubtitle}>{`Mesmas fotos para todos · ${today()}`}</Text>
+          </View>
+          <SymbolView name={ICONS.chevron} tintColor={COLORS.muted} size={16} />
+        </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [styles.modeCard, pressed && styles.pressed]}
+          onPress={() => router.push({ pathname: '/game', params: { mode: 'all' } })}
+        >
+          <View style={styles.stepIcon}>
+            <SymbolView name={ICONS.allPhotos} tintColor={COLORS.primary} size={22} />
+          </View>
+          <View style={styles.grow}>
+            <Text style={styles.modeTitle}>Todos os locais</Text>
+            <Text style={styles.modeSubtitle}>
+              {placeCount === null ? 'Cada foto uma vez' : `${placeCount} fotos, cada uma uma vez`}
+            </Text>
           </View>
           <SymbolView name={ICONS.chevron} tintColor={COLORS.muted} size={16} />
         </Pressable>
@@ -183,7 +205,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   playText: { fontSize: 18, fontWeight: '800', color: '#fff' },
-  dailyCard: {
+  modeCard: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
@@ -192,8 +214,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.card,
   },
   grow: { flex: 1 },
-  dailyTitle: { fontSize: 16, fontWeight: '700', color: COLORS.text },
-  dailySubtitle: { fontSize: 13, color: COLORS.muted },
+  modeTitle: { fontSize: 16, fontWeight: '700', color: COLORS.text },
+  modeSubtitle: { fontSize: 13, color: COLORS.muted },
   linkButton: {
     flexDirection: 'row',
     alignItems: 'center',
