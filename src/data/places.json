@@ -13,6 +13,19 @@
     ]
   },
   {
+    "id": "escadaria-convivencia",
+    "name": "Escadaria da área de convivência",
+    "coordinate": {
+      "latitude": -22.377623,
+      "longitude": -47.371991
+    },
+    "difficulty": "medium",
+    "indoor": false,
+    "photos": [
+      "escadaria-convivencia-1"
+    ]
+  },
+  {
     "id": "ginasio",
     "name": "Ginásio",
     "coordinate": {
