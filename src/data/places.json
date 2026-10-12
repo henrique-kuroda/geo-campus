@@ -26,6 +26,19 @@
     ]
   },
   {
+    "id": "neowater",
+    "name": "Neowater e caixas d'água",
+    "coordinate": {
+      "latitude": -22.375698,
+      "longitude": -47.371951
+    },
+    "difficulty": "medium",
+    "indoor": false,
+    "photos": [
+      "neowater-1"
+    ]
+  },
+  {
     "id": "predio-budoya",
     "name": "Prédio Paulo Sávio Budoya",
     "coordinate": {
