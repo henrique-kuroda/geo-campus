@@ -50,5 +50,18 @@
     "photos": [
       "predio-budoya-1"
     ]
+  },
+  {
+    "id": "recepcao-clinica",
+    "name": "Recepção da clínica",
+    "coordinate": {
+      "latitude": -22.374072,
+      "longitude": -47.369181
+    },
+    "difficulty": "medium",
+    "indoor": true,
+    "photos": [
+      "recepcao-clinica-1"
+    ]
   }
 ]
