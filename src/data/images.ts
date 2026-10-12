@@ -1,5 +1,6 @@
 // Gerado por scripts/import-photos.mjs: o require de imagem precisa ser estático no React Native.
 const images: Record<string, number> = {
+  'anfiteatro-1': require('../../assets/places/anfiteatro-1.jpg'),
   'busto-fundador-1': require('../../assets/places/busto-fundador-1.jpg'),
   'escadaria-convivencia-1': require('../../assets/places/escadaria-convivencia-1.jpg'),
   'ginasio-1': require('../../assets/places/ginasio-1.jpg'),

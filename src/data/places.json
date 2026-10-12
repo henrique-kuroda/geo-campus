@@ -1,5 +1,18 @@
 [
   {
+    "id": "anfiteatro",
+    "name": "Anfiteatro ao ar livre",
+    "coordinate": {
+      "latitude": -22.375057,
+      "longitude": -47.371936
+    },
+    "difficulty": "medium",
+    "indoor": false,
+    "photos": [
+      "anfiteatro-1"
+    ]
+  },
+  {
     "id": "busto-fundador",
     "name": "Busto do fundador",
     "coordinate": {
