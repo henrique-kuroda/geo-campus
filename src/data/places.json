@@ -65,6 +65,19 @@
     ]
   },
   {
+    "id": "oficina-mecanica",
+    "name": "Oficina mecânica",
+    "coordinate": {
+      "latitude": -22.37692,
+      "longitude": -47.36974
+    },
+    "difficulty": "medium",
+    "indoor": true,
+    "photos": [
+      "oficina-mecanica-1"
+    ]
+  },
+  {
     "id": "portaria",
     "name": "Portaria principal",
     "coordinate": {
