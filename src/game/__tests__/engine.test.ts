@@ -1,4 +1,10 @@
-import { gameReducer, initialGameState, totalScore, type GameState } from '../engine';
+import {
+  gameReducer,
+  initialGameState,
+  summarizeMatch,
+  totalScore,
+  type GameState,
+} from '../engine';
 import type { Round } from '../types';
 
 const target = { latitude: -22.0, longitude: -47.0 };
@@ -59,5 +65,25 @@ describe('gameReducer', () => {
   it('NEXT só funciona na tela de resultado', () => {
     const state = start();
     expect(gameReducer(state, { type: 'NEXT' })).toBe(state);
+  });
+});
+
+describe('summarizeMatch', () => {
+  it('monta o registro do histórico com as rodadas', () => {
+    let state: GameState = start();
+    const far = { latitude: -22.0009, longitude: -47.0 }; // ~100 m ao sul
+    for (const guess of [target, far]) {
+      state = gameReducer(state, { type: 'SET_GUESS', coordinate: guess });
+      state = gameReducer(state, { type: 'CONFIRM', target });
+      state = gameReducer(state, { type: 'NEXT' });
+    }
+
+    const record = summarizeMatch(state, { a: 'Capela' }, 'classic', '2026-10-21T20:00:00.000Z');
+
+    expect(record).toMatchObject({ mode: 'classic', max: 10000, total: totalScore(state) });
+    expect(record.rounds).toHaveLength(2);
+    expect(record.rounds![0]).toEqual({ placeId: 'a', placeName: 'Capela', distance: 0, score: 5000 });
+    // Sem nome conhecido, usa o id; a distância é arredondada para metros inteiros.
+    expect(record.rounds![1]).toMatchObject({ placeId: 'b', placeName: 'b', distance: 100 });
   });
 });

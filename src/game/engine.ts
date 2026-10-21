@@ -1,5 +1,6 @@
+import { GAME_CONFIG } from './config';
 import { distanceInMeters, scoreForDistance } from './scoring';
-import type { Coordinate, Round } from './types';
+import type { Coordinate, MatchRecord, Round } from './types';
 
 // idle → playing → result → playing … → finished
 export type GameStatus = 'idle' | 'playing' | 'result' | 'finished';
@@ -54,4 +55,24 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
 export function totalScore(state: GameState): number {
   return state.rounds.reduce((sum, round) => sum + (round.score ?? 0), 0);
+}
+
+export function summarizeMatch(
+  state: GameState,
+  placeNames: Record<string, string>,
+  mode: string,
+  date: string,
+): MatchRecord {
+  return {
+    date,
+    mode,
+    total: totalScore(state),
+    max: state.rounds.length * GAME_CONFIG.maxScore,
+    rounds: state.rounds.map(round => ({
+      placeId: round.placeId,
+      placeName: placeNames[round.placeId] ?? round.placeId,
+      distance: Math.round(round.distance ?? 0),
+      score: round.score ?? 0,
+    })),
+  };
 }

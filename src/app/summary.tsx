@@ -1,37 +1,50 @@
-import { useEffect, useRef } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { MatchRounds } from '@/components/MatchRounds';
+import { ScoreCard } from '@/components/ScoreCard';
 import { COLORS } from '@/constants/theme';
-import { modeLabel } from '@/game/modes';
-import { saveMatch } from '@/services/history';
+import type { MatchRecord } from '@/game/types';
+import { findMatch } from '@/services/history';
 
+// A partida já foi salva pela tela do jogo; aqui só é lida pelo identificador (data).
 export default function SummaryScreen() {
-  const params = useLocalSearchParams<{ total?: string; max?: string; mode?: string }>();
-  const total = Number(params.total ?? 0);
-  const max = Number(params.max ?? 0);
-  const mode = params.mode ?? 'classic';
-  const saved = useRef(false);
+  const { date } = useLocalSearchParams<{ date?: string }>();
+  const insets = useSafeAreaInsets();
+  const [match, setMatch] = useState<MatchRecord | null>(null);
 
-  // O ref evita salvar a mesma partida duas vezes se o efeito rodar de novo.
   useEffect(() => {
-    if (saved.current) return;
-    saved.current = true;
-    saveMatch({ date: new Date().toISOString(), mode, total, max });
-  }, [mode, total, max]);
+    if (date) findMatch(date).then(found => setMatch(found ?? null));
+  }, [date]);
 
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.label}>{modeLabel(mode)}</Text>
-        <Text style={styles.total}>{total.toLocaleString('pt-BR')}</Text>
-        <Text style={styles.label}>de {max.toLocaleString('pt-BR')} pontos</Text>
-      </View>
+      <ScrollView contentContainerStyle={styles.content}>
+        {match && (
+          <>
+            <ScoreCard match={match} />
+            {match.rounds && (
+              <>
+                <Text style={styles.sectionLabel}>RODADAS</Text>
+                <MatchRounds rounds={match.rounds} />
+              </>
+            )}
+          </>
+        )}
+      </ScrollView>
 
-      <View style={styles.buttons}>
-        <Pressable style={styles.button} onPress={() => router.replace('/game')}>
+      <View style={[styles.buttons, { paddingBottom: insets.bottom + 16 }]}>
+        <Pressable
+          style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+          onPress={() => router.replace('/game')}
+        >
           <Text style={styles.buttonText}>Nova partida</Text>
         </Pressable>
-        <Pressable style={[styles.button, styles.secondary]} onPress={() => router.back()}>
+        <Pressable
+          style={({ pressed }) => [styles.button, styles.secondary, pressed && styles.pressed]}
+          onPress={() => router.back()}
+        >
           <Text style={styles.buttonText}>Início</Text>
         </Pressable>
       </View>
@@ -40,24 +53,16 @@ export default function SummaryScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    padding: 24,
-    paddingBottom: 48,
-    backgroundColor: COLORS.background,
+  container: { flex: 1, backgroundColor: COLORS.background },
+  content: { gap: 12, padding: 20 },
+  sectionLabel: {
+    marginTop: 8,
+    fontSize: 13,
+    fontWeight: '700',
+    letterSpacing: 1,
+    color: COLORS.muted,
   },
-  card: {
-    alignItems: 'center',
-    gap: 4,
-    marginTop: 32,
-    padding: 32,
-    borderRadius: 16,
-    backgroundColor: COLORS.card,
-  },
-  label: { fontSize: 16, color: COLORS.muted },
-  total: { fontSize: 48, fontWeight: '800', color: COLORS.primary },
-  buttons: { gap: 12 },
+  buttons: { gap: 12, paddingHorizontal: 20, paddingTop: 12 },
   button: {
     alignItems: 'center',
     paddingVertical: 16,
@@ -65,5 +70,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   secondary: { backgroundColor: COLORS.dark },
+  pressed: { opacity: 0.75 },
   buttonText: { color: '#fff', fontSize: 17, fontWeight: '700' },
 });

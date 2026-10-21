@@ -9,6 +9,7 @@ export default function RootLayout() {
         <Stack.Screen name="game" options={{ headerShown: false, gestureEnabled: false }} />
         <Stack.Screen name="summary" options={{ title: 'Resultado', headerBackVisible: false }} />
         <Stack.Screen name="history" options={{ title: 'Histórico' }} />
+        <Stack.Screen name="match" options={{ title: 'Detalhes da partida' }} />
       </Stack>
     </GestureHandlerRootView>
   );

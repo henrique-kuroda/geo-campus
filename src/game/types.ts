@@ -22,3 +22,20 @@ export type Round = {
   distance?: number;
   score?: number;
 };
+
+// O que fica salvo no histórico ao fim de cada partida.
+export type RoundResult = {
+  placeId: string;
+  placeName: string;
+  distance: number;
+  score: number;
+};
+
+export type MatchRecord = {
+  date: string;
+  mode: string;
+  total: number;
+  max: number;
+  // Partidas salvas antes da tela de detalhes não têm as rodadas.
+  rounds?: RoundResult[];
+};

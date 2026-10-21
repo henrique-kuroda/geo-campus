@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -9,11 +9,11 @@ import { ResultMap } from '@/components/ResultMap';
 import { COLORS } from '@/constants/theme';
 import { resolvePhoto } from '@/data/images';
 import { placeRepository } from '@/data/repository';
-import { GAME_CONFIG } from '@/game/config';
-import { gameReducer, initialGameState, totalScore } from '@/game/engine';
+import { gameReducer, initialGameState, summarizeMatch } from '@/game/engine';
 import { modeLabel, roundCount } from '@/game/modes';
 import { buildRounds, dailySeed, mulberry32 } from '@/game/random';
 import type { Place } from '@/game/types';
+import { saveMatch } from '@/services/history';
 
 export default function GameScreen() {
   const { mode = 'classic' } = useLocalSearchParams<{ mode?: string }>();
@@ -30,15 +30,17 @@ export default function GameScreen() {
     });
   }, [mode]);
 
+  // Ao terminar, salva a partida com as rodadas e abre o resumo. O ref evita salvar duas vezes.
+  const finishing = useRef(false);
   useEffect(() => {
-    if (state.status === 'finished') {
-      const max = state.rounds.length * GAME_CONFIG.maxScore;
-      router.replace({
-        pathname: '/summary',
-        params: { total: String(totalScore(state)), max: String(max), mode },
-      });
-    }
-  }, [state, mode]);
+    if (state.status !== 'finished' || finishing.current) return;
+    finishing.current = true;
+    const names = Object.fromEntries(Object.values(places).map(place => [place.id, place.name]));
+    const record = summarizeMatch(state, names, mode, new Date().toISOString());
+    saveMatch(record).then(() =>
+      router.replace({ pathname: '/summary', params: { date: record.date } }),
+    );
+  }, [state, mode, places]);
 
   if (state.status === 'idle') {
     return (

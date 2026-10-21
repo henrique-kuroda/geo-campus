@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { router } from 'expo-router';
+import { SymbolView } from 'expo-symbols';
+import { formatMatchDate } from '@/components/ScoreCard';
 import { COLORS } from '@/constants/theme';
 import { modeLabel } from '@/game/modes';
 import { loadHistory, type MatchRecord } from '@/services/history';
-
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
 
 export default function HistoryScreen() {
   const [history, setHistory] = useState<MatchRecord[] | null>(null);
@@ -24,10 +24,13 @@ export default function HistoryScreen() {
       keyExtractor={item => item.date}
       ListEmptyComponent={<Text style={styles.empty}>Nenhuma partida jogada ainda.</Text>}
       renderItem={({ item }) => (
-        <View style={styles.row}>
-          <View>
+        <Pressable
+          style={({ pressed }) => [styles.row, pressed && styles.pressed]}
+          onPress={() => router.push({ pathname: '/match', params: { date: item.date } })}
+        >
+          <View style={styles.grow}>
             <Text style={styles.mode}>{modeLabel(item.mode)}</Text>
-            <Text style={styles.date}>{formatDate(item.date)}</Text>
+            <Text style={styles.date}>{formatMatchDate(item.date)}</Text>
           </View>
           <Text style={styles.total}>
             {item.total.toLocaleString('pt-BR')}
@@ -35,7 +38,12 @@ export default function HistoryScreen() {
               <Text style={styles.date}>{` / ${item.max.toLocaleString('pt-BR')}`}</Text>
             ) : null}
           </Text>
-        </View>
+          <SymbolView
+            name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }}
+            tintColor={COLORS.muted}
+            size={14}
+          />
+        </Pressable>
       )}
     />
   );
@@ -48,11 +56,13 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    gap: 10,
     padding: 16,
     borderRadius: 12,
     backgroundColor: COLORS.card,
   },
+  pressed: { opacity: 0.75 },
+  grow: { flex: 1 },
   mode: { fontSize: 16, fontWeight: '700', color: COLORS.text },
   date: { fontSize: 13, color: COLORS.muted },
   total: { fontSize: 20, fontWeight: '700', color: COLORS.primary },
