@@ -65,6 +65,19 @@
     ]
   },
   {
+    "id": "laboratorio-metodologias",
+    "name": "Laboratório de Metodologias Ativas",
+    "coordinate": {
+      "latitude": -22.37763,
+      "longitude": -47.371525
+    },
+    "difficulty": "medium",
+    "indoor": true,
+    "photos": [
+      "laboratorio-metodologias-1"
+    ]
+  },
+  {
     "id": "neowater",
     "name": "Neowater e caixas d'água",
     "coordinate": {
