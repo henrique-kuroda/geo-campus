@@ -53,6 +53,21 @@ Leia o QR code que aparece no terminal com o Expo Go (no iPhone, com a câmera).
 | `npm run lint` | ESLint |
 | `npm run import-photos` | Trata as fotos de `fotos-originais/` e gera os dados dos locais |
 
+## Banco de dados (Supabase)
+
+Os locais e as fotos ficam no [Supabase](https://supabase.com): a tabela `places` guarda nome, coordenada, dificuldade e as fotos, e o bucket público `places` guarda as imagens. Assim um local novo aparece no app de todo mundo sem gerar uma nova versão.
+
+- O app só **lê** o banco, com a chave publishable (protegida pelo RLS em `supabase/schema.sql`).
+- Sem internet, o app usa a última lista baixada; sem ela, os locais empacotados em `src/data/places.json`.
+- Sem o arquivo `.env`, o app funciona só com os locais empacotados.
+
+Configuração (uma vez):
+
+1. Crie um projeto no Supabase e rode `supabase/schema.sql` no SQL Editor.
+2. Copie `.env.example` para `.env` e preencha a URL e a chave publishable.
+3. Crie `.env.local` com `SUPABASE_SECRET_KEY=...` (fica fora do Git; só o script de envio usa).
+4. Rode `npm run sync-supabase` para enviar os locais e as fotos.
+
 ## Adicionando locais
 
 1. Ative a localização na câmera do celular (no iPhone, formato "Mais compatível", porque HEIC não é lido).
