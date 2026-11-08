@@ -18,6 +18,14 @@ const BUCKET = 'places';
 const PHOTOS_DIR = 'assets/places';
 const supabase = createClient(url, secretKey, { auth: { persistSession: false } });
 
+// Cria o bucket público das fotos se ainda não existir (o SQL do schema nem sempre consegue).
+const { data: bucket } = await supabase.storage.getBucket(BUCKET);
+if (!bucket) {
+  const { error } = await supabase.storage.createBucket(BUCKET, { public: true });
+  if (error) throw new Error(`Bucket ${BUCKET}: ${error.message}`);
+  console.log(`Bucket '${BUCKET}' criado.`);
+}
+
 const places = JSON.parse(await readFile('src/data/places.json', 'utf8'));
 const ready = places.filter(place => place.coordinate);
 const skipped = places.filter(place => !place.coordinate).map(place => place.id);
