@@ -44,3 +44,7 @@ example
 
 # fotos cruas do celular (têm GPS no EXIF)
 fotos-originais/
+
+# configurações locais de ferramentas do editor
+.claude/
+AGENTS.md
