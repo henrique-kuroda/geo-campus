@@ -5,6 +5,7 @@
   "dependencies": {
     "@expo/ui": "~57.0.21",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@supabase/supabase-js": "^2.119.0",
     "expo": "~57.0.26",
     "expo-constants": "~57.0.20",
     "expo-device": "~57.0.2",
@@ -52,7 +53,8 @@
     "lint": "expo lint",
     "test": "jest",
     "typecheck": "tsc --noEmit",
-    "import-photos": "node scripts/import-photos.mjs"
+    "import-photos": "node scripts/import-photos.mjs",
+    "sync-supabase": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/sync-supabase.mjs"
   },
   "private": true,
   "jest": {
