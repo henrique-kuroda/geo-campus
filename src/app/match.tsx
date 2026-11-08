@@ -19,7 +19,11 @@ export default function MatchScreen() {
   if (match === undefined) return null;
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.content}
+      contentInsetAdjustmentBehavior="automatic"
+    >
       {match === null ? (
         <Text style={styles.message}>Partida não encontrada.</Text>
       ) : (

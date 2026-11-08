@@ -20,7 +20,8 @@ export default function SummaryScreen() {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
+      {/* No iOS 26+ o cabeçalho é transparente: o automatic afasta o conteúdo dele. */}
+      <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.content}>
         {match && (
           <>
             <ScoreCard match={match} />

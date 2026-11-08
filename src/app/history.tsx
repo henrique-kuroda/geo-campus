@@ -19,6 +19,7 @@ export default function HistoryScreen() {
   return (
     <FlatList
       style={styles.list}
+      contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={styles.content}
       data={history}
       keyExtractor={item => item.date}
