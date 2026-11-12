@@ -46,7 +46,8 @@ export function PhotoViewer({ source, showHint = false }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000' },
+  // overflow: no navegador, a parte da foto além da tela alargaria a página inteira.
+  container: { flex: 1, overflow: 'hidden', backgroundColor: '#000' },
   hint: {
     position: 'absolute',
     alignSelf: 'center',
