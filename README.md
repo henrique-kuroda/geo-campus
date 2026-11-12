@@ -46,8 +46,19 @@ npx expo start
 Leia o QR code que aparece no terminal com o Expo Go (no iPhone, com a câmera). O computador e o celular precisam estar na mesma rede Wi-Fi.
 
 - **iPhone:** o Expo Go exige estar logado na mesma conta Expo no app e no terminal (`npx expo login`).
-- O mapa é nativo (Apple Maps no iPhone, Google Maps no Android) e funciona no Expo Go sem chave de API. Ele não roda no navegador.
+- O mapa é nativo (Apple Maps no iPhone, Google Maps no Android) e funciona no Expo Go sem chave de API.
 - Mudou o `.env`? Reinicie com `npx expo start -c`: as variáveis são lidas só ao iniciar.
+
+### Versão web (demonstração)
+
+Para mostrar o jogo sem o Expo Go, gere a versão web e sirva a pasta `dist/`:
+
+```bash
+npx expo export --platform web
+npx expo serve --port 8090
+```
+
+Abra http://localhost:8090 (no computador, o modo celular do navegador, F12 → Ctrl+Shift+M, deixa a tela no tamanho certo). O `react-native-maps` não roda no navegador, então na web o mapa é o [Leaflet](https://leafletjs.com) com foto de satélite da Esri (`GuessMap.web.tsx` e `ResultMap.web.tsx`, que o Expo escolhe sozinho na web). Ele tem a mesma área do campus e o mesmo limite de zoom, mas não gira.
 
 ## Scripts
 
